@@ -29,3 +29,6 @@ pom.xml.asc
 .hgignore
 .hg/
 /resources/public/js
+
+transactor.properties
+datomic-pro-0.9.5561.56
