@@ -29,14 +29,14 @@
                     "Home"]]
                 [:li.nav-item
                   [:a.nav-link.active
-                    [:i.ion-compose
-                      {:on-click #(set-route! app :article/create)}
-                      " New Post"]]]
+                    {:on-click #(set-route! app :article/create)}
+                    [:i.ion-compose]
+                    " New Post"]]
                 [:li.nav-item
                   [:a.nav-link.active
-                    [:i.ion-gear-a 
-                      {:on-click #(set-route! app :settings)}
-                      " Settings"]]]
+                    {:on-click #(set-route! app :settings)}
+                    [:i.ion-gear-a]
+                    " Settings"]]
                 [:li.nav-item
                   [:a.nav-link.active
                     {:on-click #(set-route! app :login)}
