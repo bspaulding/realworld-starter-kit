@@ -1,12 +1,20 @@
 (ns realworld.components.app
   (:require [om.next :as om :refer [defui]]
-            [sablono.core :as html :refer-macros [html]]
-            [realworld.components.home :refer [Home home]]
-            [realworld.components.login :refer [Login login]]
-            [realworld.components.profile :refer [Profile profile]]
-            [realworld.components.settings :refer [Settings settings]]
-            [realworld.components.article-form :refer [article-form]]
-            [realworld.components.article :refer [Article CommentForm article]]))
+            [sablono.core :as html :refer-macros [html]]         
+            [compassus.core :refer [set-route!]]
+            [realworld.core :refer [app]]
+            [realworld.components.home :refer [Home]]
+            [realworld.components.login :refer [Login]]
+            [realworld.components.profile :refer [Profile]]
+            [realworld.components.settings :refer [Settings]]
+            [realworld.components.article-form :refer [ArticleForm]]))
+
+(def routes
+  {:home Home
+   :login Login
+   :profile Profile
+   :settings Settings
+   :article/create ArticleForm})
 
 (defui Nav
   Object
@@ -16,15 +24,23 @@
               [:a.navbar-brand {:href "index.html"} "conduit"]
               [:ul.nav.navbar-nav.pull-xs-right
                 [:li.nav-item
-                  [:a.nav-link.active "Home"]]
+                  [:a.nav-link.active
+                    {:on-click #(set-route! app :home)}
+                    "Home"]]
                 [:li.nav-item
                   [:a.nav-link.active
-                    [:i.ion-compose " New Post"]]]
+                    [:i.ion-compose
+                      {:on-click #(set-route! app :article/create)}
+                      " New Post"]]]
                 [:li.nav-item
                   [:a.nav-link.active
-                    [:i.ion-gear-a " Settings"]]]
+                    [:i.ion-gear-a 
+                      {:on-click #(set-route! app :settings)}
+                      " Settings"]]]
                 [:li.nav-item
-                  [:a.nav-link.active "Sign Up"]]]]])))
+                  [:a.nav-link.active
+                    {:on-click #(set-route! app :login)}
+                    "Sign Up"]]]]])))
 (def nav (om/factory Nav))
 
 (defui Footer
@@ -39,14 +55,10 @@
                  ". Code & design licensed under MIT."]]]])))
 (def footer (om/factory Footer))
 
-(defui App
-  static om/IQuery
-  (query [this] [:current-user :articles/list])
+(defui Wrapper
   Object
   (render [this]
-    #_(.log js/console "app: " (om/props this))
-    (html [:div (nav)
-                (article (into {} (conj {:current-user (:current-user (om/props this))}
-                                        (first (:articles/list (om/props this))))))
-                (footer)])))
-
+    (let [{:keys [factory props]} (om/props this)]
+      (html [:div (nav)
+                  (factory props)
+                  (footer)]))))

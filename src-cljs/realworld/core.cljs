@@ -1,7 +1,8 @@
 (ns realworld.core
   (:require [om.next :as om :refer [defui]]
             [om.dom :as dom]
-            [realworld.components.app :refer [App]]))
+            [compassus.core :as compassus]
+            [realworld.components.app :refer [routes Wrapper]]))
 
 (def state
   {:articles/list
@@ -38,9 +39,15 @@
     (.log js/console "read: " (str key) value)
     value))
 
-(def reconciler (om/reconciler {:state (atom state)
-                                :parser (om/parser {:read read})}))
-(om/add-root!
-  reconciler
-  App
-  (.querySelector js/document "#app"))
+(def app
+  (compassus/application
+    {:routes routes
+     :index-route :home
+     :mixins [(compassus/wrap-render Wrapper)]
+     :reconciler (om/reconciler
+                  {:state (atom state)
+                   :parser (compassus/parser
+                            {:read read
+                             :route-dispatch false})})}))
+
+(compassus/mount! app (.querySelector js/document "#app"))

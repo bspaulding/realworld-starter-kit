@@ -12,6 +12,7 @@
                  [org.omcljs/om "1.0.0-beta1"]
                  [sablono "0.8.3"]
                  [markdown-clj "1.0.2"]
+                 [compassus "1.0.0-alpha3"]
                  #_[com.datomic/datomic-pro "0.9.5561.56"]]
   :plugins [[lein-cljsbuild "1.1.7"]
             [lein-figwheel "0.5.15"]]
