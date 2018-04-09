@@ -2,6 +2,8 @@
   (:require [om.next :as om :refer [defui]]
             [om.dom :as dom]
             [compassus.core :as compassus]
+            [bidi.bidi :as bidi]
+            [pushy.core :as pushy]
             [realworld.components.app :refer [routes Wrapper]]))
 
 (def state
@@ -39,11 +41,29 @@
     (.log js/console "read: " (str key) value)
     value))
 
+(declare app)
+(def bidi-routes
+  ["/" {"" :home
+        "new-post" :article/create
+        "login" :login
+        "settings" :settings
+        "profile" :profile}])
+(defn update-route!
+  [{:keys [handler] :as route}]
+  (let [current-route (compassus/current-route app)]
+    (when (not= handler current-route)
+      (compassus/set-route! app handler))))
+(def history
+  (pushy/pushy update-route!
+               (partial bidi/match-route bidi-routes)))
+
 (def app
   (compassus/application
     {:routes routes
      :index-route :home
-     :mixins [(compassus/wrap-render Wrapper)]
+     :mixins [(compassus/wrap-render Wrapper)
+              (compassus/did-mount (fn [_] (pushy/start! history)))
+              (compassus/will-unmount (fn [_] (pushy/stop! history)))]
      :reconciler (om/reconciler
                   {:state (atom state)
                    :parser (compassus/parser

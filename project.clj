@@ -13,6 +13,8 @@
                  [sablono "0.8.3"]
                  [markdown-clj "1.0.2"]
                  [compassus "1.0.0-alpha3"]
+                 [kibu/pushy "0.3.8"]
+                 [bidi "2.1.3"]
                  #_[com.datomic/datomic-pro "0.9.5561.56"]
 
                  ;; from vase template

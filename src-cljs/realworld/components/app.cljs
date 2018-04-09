@@ -1,8 +1,7 @@
 (ns realworld.components.app
   (:require [om.next :as om :refer [defui]]
-            [sablono.core :as html :refer-macros [html]]         
+            [sablono.core :as html :refer-macros [html]]
             [compassus.core :refer [set-route!]]
-            [realworld.core :refer [app]]
             [realworld.components.home :refer [Home]]
             [realworld.components.login :refer [Login]]
             [realworld.components.profile :refer [Profile]]
@@ -25,21 +24,21 @@
               [:ul.nav.navbar-nav.pull-xs-right
                 [:li.nav-item
                   [:a.nav-link.active
-                    {:on-click #(set-route! app :home)}
+                    {:href "/"}
                     "Home"]]
                 [:li.nav-item
                   [:a.nav-link.active
-                    {:on-click #(set-route! app :article/create)}
+                    {:href "/new-post"}
                     [:i.ion-compose]
                     " New Post"]]
                 [:li.nav-item
                   [:a.nav-link.active
-                    {:on-click #(set-route! app :settings)}
+                    {:href "/settings"}
                     [:i.ion-gear-a]
                     " Settings"]]
                 [:li.nav-item
                   [:a.nav-link.active
-                    {:on-click #(set-route! app :login)}
+                    {:href "/login"}
                     "Sign Up"]]]]])))
 (def nav (om/factory Nav))
 
