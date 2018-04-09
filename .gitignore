@@ -32,3 +32,4 @@ pom.xml.asc
 
 transactor.properties
 datomic-pro-0.9.5561.56
+.rebel_readline_history
