@@ -1,0 +1,54 @@
+{:activated-apis [:realworld/v1]
+ :datomic-uri "datomic:mem://realworld"
+ :descriptor
+
+ {:vase/norms
+  {:realworld/base-schema
+   {:vase.norm/txes
+    [#vase/schema-tx [[:user/id :one :uuid :identity "unique id for the user"]
+                      [:user/name :one :string "user name"]
+                      [:user/email :one :string "user email"]
+                      [:user/bio :one :string "user bio"]
+                      [:user/image :one :string "url for user avatar image"]
+                      [:user/following :many :ref "a collection of users this user is following"]
+
+                      [:tag :one :string :identity "a string tag/label which can be applied to articles"]
+
+                      [:article/id :one :uuid :identity "unique id for the article"]
+                      [:article/slug :one :string :unique "unique url slug for an article"]
+                      [:article/title :one :string "article title"]
+                      [:article/description :one :string "article description"]
+                      [:article/body :one :string "article body"]
+                      [:article/tags :many :ref "a collection of tags applied to the article"]
+                      [:article/author :one :ref "a user, the author of the article"]
+                      [:article/comments :many :ref "a collection of comments about this article"]
+                      [:article/favorited-by :many :ref "a collection of users who favorited this article"]
+
+                      [:comment/id :one :uuid :identity "unique id for the comment"]
+                      [:comment/body :one :string "body of the comment"]
+                      [:comment/author :one :ref "a ref to a user, the author of the comment"]
+                      [:comment/article :one :ref "a ref to an article, which this comment is on"]]]}}
+  :vase/specs {}
+  :vase/apis
+  {:realworld/v1
+   {:vase.api/routes
+    {"/articles" {:get #vase/query {:name :realworld/v1.article-list
+                                    :query [:find (pull ?e [*])
+                                            :where [?e :article/slug ?slug]]}
+                  :post #vase/transact {:name :realworld/v1.article-create
+                                        :properties [:db/id :article/title :article/slug :article/body :article/description]}}
+     "/articles/:slug" {:get #vase/query {:name :realworld/v1.article-read
+                                          :params [slug]
+                                          :query [:find (pull ?e [*])
+                                                  :in $ ?slug
+                                                  :where [?e :article/slug ?slug]]}}
+     "/articles/:slug/comments" {:post #vase/transact {:name :realworld/v1.article-comment-create
+                                                       :properties [:db/id :comment/article :comment/id :comment/body :comment/author]}}
+     "/query" {:get #vase/query {:name :realworld/v1.query
+                                 :params [[selector [:*]]]
+                                 :edn-coerce [selector]
+                                 :query [:find [(pull ?e selector) ...]
+                                         :in $ selector
+                                         :where [?e :article/slug]]}}}
+    :vase.api/schemas [:realworld/base-schema]
+    :vase.api/forward-headers ["vaserequest-id"]}}}}
