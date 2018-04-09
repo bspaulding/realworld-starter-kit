@@ -33,7 +33,7 @@
           [:p (get-in (om/props this) [:article/description])]
           [:span "Read more..."]
           [:ul.tag-list
-            (map (fn [tag] [:li.tag-default.tag-pill.tag-outline tag])
+            (map (fn [tag] [:li.tag-default.tag-pill.tag-outline {:key tag} tag])
                  (:article/tags (om/props this)))]]])))
 
 (def article-preview (om/factory ArticlePreview))

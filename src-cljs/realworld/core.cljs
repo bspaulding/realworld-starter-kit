@@ -8,7 +8,8 @@
 
 (def state
   {:articles/list
-    [{:article/title "How to build webapps that scale"
+    [{:article/id "article-one"
+      :article/title "How to build webapps that scale"
       :article/description "This is the description for the post."
       :article/body "Web development technologies have evolved at an incredible clip over the past few years.\n## Introducing RealWorld\nWeb development technologies have evolved at an incredible clip over the past few years."
       :article/created-at (goog.date.Date. 2018 0 20)
@@ -21,7 +22,8 @@
                           :comment/created-at (goog.date.Date. 2017 11 29)
                           :comment/author {:user/name "Jacob Schmidt"
                                            :user/image "http://i.imgur.com/Qr71crq.jpg"}}]}
-     {:article/title "The song you won't ever stop singing. No matter how hard you try."
+     {:article/id "article-two"
+      :article/title "The song you won't ever stop singing. No matter how hard you try."
       :article/description "This is the description for the post."
       :article/created-at (goog.date.Date. 2018 0 20)
       :article/favorites-count 32

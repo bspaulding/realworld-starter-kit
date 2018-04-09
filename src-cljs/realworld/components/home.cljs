@@ -23,11 +23,12 @@
                         [:a.nav-link.disabled {:href ""} "Your feed"]]
                       [:li.nav-item
                         [:a.nav-link.active {:href ""} "Global feed"]]]]
-                  (map article-preview (:articles/list (om/props this)))
+                  (map #(article-preview (conj % {:react-key (:article/id %)}))
+                       (:articles/list (om/props this)))
                   [:div.col-md-3
                     [:div.sidebar
                       [:p "Popular Tags"]
                       [:div.tag-list
-                        (map (fn [tag] [:a.tag-pill.tag-default tag])
+                        (map (fn [tag] [:a.tag-pill.tag-default {:key tag} tag])
                              (:tags/popular (om/props this)))]]]]]]])))
 (def home (om/factory Home))
