@@ -43,7 +43,7 @@
    {:db/ident :article/body
     :db/valueType :db.type/string
     :db/cardinality :db.cardinality/one}
-   {:db/ident :article/tag
+   {:db/ident :article/tags
     :db/valueType :db.type/ref
     :db/cardinality :db.cardinality/many}
    {:db/ident :article/author
@@ -70,9 +70,9 @@
     :db/cardinality :db.cardinality/one}])
 
 (def db-uri "datomic:dev://localhost:4334/realworld")
-(def conn (d/connect db-uri))
 (d/delete-database db-uri)
 (d/create-database db-uri)
+(def conn (d/connect db-uri))
 (d/transact conn schema)
 
 (def sample-user
@@ -86,14 +86,14 @@
     :user/name "gecko"
     :user/bio "I work at geico"
     :user/image ""
-    :user/following [[:user/id (:id jake)]]}])
+    :user/following [[:user/id (:id sample-user)]]}])
 (d/transact conn sample-user-2)
 
 (defn user-map [[_ username bio id image]]
   {:id id
    :username username
    :bio bio
-   :image image}
+   :image image})
 
 (defn get-user-by-name-query [uname]
   `[:find ?e ?name ?bio ?id ?image
@@ -117,7 +117,7 @@
     :article/title "How to train your dragon"
     :article/description "Ever wonder how?"
     :article/author [:user/id (:id jake)]
-    :article/body "It takes a Jacobian"}
+    :article/body "It takes a Jacobian"}])
 (d/transact conn sample-article)
 (def sample-article-2
   [{:article/id (d/squuid)
@@ -221,6 +221,9 @@
           {:article/author [:user/name]}
           {:article/comments [:comment/body {:comment/author [:user/name]}]}]
         ;; WHERE
+        [:article/slug "how-to-train-your-dragon"])
+(d/pull (d/db conn)
+        [:article/title]
         [:article/slug "how-to-train-your-dragon"])
 (d/pull (d/db conn)
         '[:user/name {:user/following [:user/name]}]
